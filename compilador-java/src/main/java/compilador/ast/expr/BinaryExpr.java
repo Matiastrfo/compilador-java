@@ -7,7 +7,7 @@ public class BinaryExpr implements Expr {
         this.op = op; this.left = left; this.right = right;
     }
     @Override
-    public <T> T accept(compilador.visitors.Visitor<T> visitor) {
+    public <T> T accept(main.java.compilador.visitors.Visitor<T> visitor) {
         return visitor.visitBinaryExpr(this);
     }
 }

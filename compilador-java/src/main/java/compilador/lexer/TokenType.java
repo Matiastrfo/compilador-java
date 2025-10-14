@@ -1,13 +1,27 @@
 package main.java.compilador.lexer;
 
 public enum TokenType {
-    // palabras reservadas
-    LONG, DOUBLE, IF, THEN, ELSE, WHILE, BREAK, READ, WRITE,
-    // operadores y símbolos
-    PLUS, MINUS, MULT, DIV, GT, LT, GE, LE, EQ, NEQ, DIFF,
-    ASSIGN, LPAREN, RPAREN, LBRACE, RBRACE, SEMI, COMMA,
-    // literales y id
+    // PALABRAS RESERVADAS
+    LONG, DOUBLE, IF, THEN, ELSE, WHILE, BREAK, READ, WRITE, TRUE, FALSE,
+    
+    // OPERADORES ARITMÉTICOS
+    PLUS, MINUS, MULT, DIV,
+    
+    // OPERADORES RELACIONALES Y LÓGICOS
+    GT, LT, GE, LE, EQ, NEQ, DIFF,
+    
+    // OPERADORES DE ASIGNACIÓN
+    ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, MULT_ASSIGN, DIV_ASSIGN,
+    
+    // OPERADORES LÓGICOS
+    AND, OR, NOT,
+    
+    // SÍMBOLOS DE AGRUPACIÓN
+    LPAREN, RPAREN, LBRACE, RBRACE, SEMI, COMMA,
+    
+    // LITERALES E IDENTIFICADORES
     ID, INT_CONST, REAL_CONST, STRING_CONST,
-    // especiales
+    
+    // ESPECIALES
     EOF
 }

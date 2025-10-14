@@ -11,7 +11,7 @@ public class Declaration implements Statement {
     }
 
     @Override
-    public <T> T accept(compilador.visitors.Visitor<T> visitor) {
+    public <T> T accept(main.java.compilador.visitors.Visitor<T> visitor) {
         return visitor.visitDeclaration(this);
     }
 }

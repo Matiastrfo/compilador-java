@@ -64,21 +64,56 @@ public class LexerManual {
                 continue;
             }
             
-            // Operadores compuestos
+            // ========== OPERADORES COMPUESTOS - CORREGIDOS ==========
+            
+            // Operadores de asignación compuesta: +=, -=, *=, /=
+            if (current == '+' && position + 1 < input.length() && input.charAt(position + 1) == '=') {
+                tokens.add(new Token(TokenType.PLUS_ASSIGN, "+=", line, column));
+                position += 2; column += 2; continue;
+            }
+            if (current == '-' && position + 1 < input.length() && input.charAt(position + 1) == '=') {
+                tokens.add(new Token(TokenType.MINUS_ASSIGN, "-=", line, column));
+                position += 2; column += 2; continue;
+            }
+            if (current == '*' && position + 1 < input.length() && input.charAt(position + 1) == '=') {
+                tokens.add(new Token(TokenType.MULT_ASSIGN, "*=", line, column));
+                position += 2; column += 2; continue;
+            }
+            if (current == '/' && position + 1 < input.length() && input.charAt(position + 1) == '=') {
+                tokens.add(new Token(TokenType.DIV_ASSIGN, "/=", line, column));
+                position += 2; column += 2; continue;
+            }
+            
+            // Operadores lógicos: &&, ||
+            if (current == '&' && position + 1 < input.length() && input.charAt(position + 1) == '&') {
+                tokens.add(new Token(TokenType.AND, "&&", line, column));
+                position += 2; column += 2; continue;
+            }
+            if (current == '|' && position + 1 < input.length() && input.charAt(position + 1) == '|') {
+                tokens.add(new Token(TokenType.OR, "||", line, column));
+                position += 2; column += 2; continue;
+            }
+            
+            // Operadores relacionales existentes + <> (alternativa a !=)
             if (current == '=' && position + 1 < input.length() && input.charAt(position + 1) == '=') {
-                tokens.add(new Token("EQ", "==", line, column));
+                tokens.add(new Token(TokenType.EQ, "==", line, column));
                 position += 2; column += 2; continue;
             }
             if (current == '!' && position + 1 < input.length() && input.charAt(position + 1) == '=') {
-                tokens.add(new Token("NEQ", "!=", line, column));
+                tokens.add(new Token(TokenType.NEQ, "!=", line, column));
                 position += 2; column += 2; continue;
             }
             if (current == '>' && position + 1 < input.length() && input.charAt(position + 1) == '=') {
-                tokens.add(new Token("GTE", ">=", line, column));
+                tokens.add(new Token(TokenType.GE, ">=", line, column));
                 position += 2; column += 2; continue;
             }
             if (current == '<' && position + 1 < input.length() && input.charAt(position + 1) == '=') {
-                tokens.add(new Token("LTE", "<=", line, column));
+                tokens.add(new Token(TokenType.LE, "<=", line, column));
+                position += 2; column += 2; continue;
+            }
+            // NUEVO: Operador <> (alternativa a !=)
+            if (current == '<' && position + 1 < input.length() && input.charAt(position + 1) == '>') {
+                tokens.add(new Token(TokenType.DIFF, "<>", line, column));
                 position += 2; column += 2; continue;
             }
             
@@ -87,7 +122,7 @@ public class LexerManual {
                 tokens.add(readString()); continue;
             }
             
-            // Identificadores
+            // Identificadores (con límite de 32 caracteres)
             if (Character.isLetter(current) || current == '_') {
                 tokens.add(readIdentifier()); continue;
             }
@@ -98,17 +133,27 @@ public class LexerManual {
             }
             
             // Operadores simples
-            if ("+-*/=<>!;(),{}".indexOf(current) != -1) {
-                tokens.add(new Token("OP", String.valueOf(current), line, column));
-                position++; column++; continue;
-            }
+            if (current == '+') { tokens.add(new Token(TokenType.PLUS, "+", line, column)); position++; column++; continue; }
+            if (current == '-') { tokens.add(new Token(TokenType.MINUS, "-", line, column)); position++; column++; continue; }
+            if (current == '*') { tokens.add(new Token(TokenType.MULT, "*", line, column)); position++; column++; continue; }
+            if (current == '/') { tokens.add(new Token(TokenType.DIV, "/", line, column)); position++; column++; continue; }
+            if (current == '=') { tokens.add(new Token(TokenType.ASSIGN, "=", line, column)); position++; column++; continue; }
+            if (current == '>') { tokens.add(new Token(TokenType.GT, ">", line, column)); position++; column++; continue; }
+            if (current == '<') { tokens.add(new Token(TokenType.LT, "<", line, column)); position++; column++; continue; }
+            if (current == '!') { tokens.add(new Token(TokenType.NOT, "!", line, column)); position++; column++; continue; }
+            if (current == ';') { tokens.add(new Token(TokenType.SEMI, ";", line, column)); position++; column++; continue; }
+            if (current == '(') { tokens.add(new Token(TokenType.LPAREN, "(", line, column)); position++; column++; continue; }
+            if (current == ')') { tokens.add(new Token(TokenType.RPAREN, ")", line, column)); position++; column++; continue; }
+            if (current == '{') { tokens.add(new Token(TokenType.LBRACE, "{", line, column)); position++; column++; continue; }
+            if (current == '}') { tokens.add(new Token(TokenType.RBRACE, "}", line, column)); position++; column++; continue; }
+            if (current == ',') { tokens.add(new Token(TokenType.COMMA, ",", line, column)); position++; column++; continue; }
             
             // Error - carácter inesperado
             System.err.printf("Error léxico [Línea %d:%d]: carácter inesperado '%c'%n", line, column, current);
             position++; column++;
         }
         
-        tokens.add(new Token("EOF", "", line, column));
+        tokens.add(new Token(TokenType.EOF, "", line, column));
         return tokens;
     }
     
@@ -120,20 +165,25 @@ public class LexerManual {
         }
         String text = input.substring(start, position);
         
-        // Palabras reservadas
-        if (text.equals("long")) return new Token("LONG", text, line, startColumn);
-        if (text.equals("double")) return new Token("DOUBLE", text, line, startColumn);
-        if (text.equals("if")) return new Token("IF", text, line, startColumn);
-        if (text.equals("then")) return new Token("THEN", text, line, startColumn);
-        if (text.equals("else")) return new Token("ELSE", text, line, startColumn);
-        if (text.equals("while")) return new Token("WHILE", text, line, startColumn);
-        if (text.equals("read")) return new Token("READ", text, line, startColumn);
-        if (text.equals("write")) return new Token("WRITE", text, line, startColumn);
-        if (text.equals("true")) return new Token("TRUE", text, line, startColumn);
-        if (text.equals("false")) return new Token("FALSE", text, line, startColumn);
-        if (text.equals("break")) return new Token("BREAK", text, line, startColumn);
+        // Verificar límite de 32 caracteres (recomendación PDF)
+        if (text.length() > 32) {
+            System.err.printf("Advertencia [Línea %d:%d]: identificador '%s' excede 32 caracteres%n", line, startColumn, text);
+        }
         
-        return new Token("ID", text, line, startColumn);
+        // Palabras reservadas
+        if (text.equals("long")) return new Token(TokenType.LONG, text, line, startColumn);
+        if (text.equals("double")) return new Token(TokenType.DOUBLE, text, line, startColumn);
+        if (text.equals("if")) return new Token(TokenType.IF, text, line, startColumn);
+        if (text.equals("then")) return new Token(TokenType.THEN, text, line, startColumn);
+        if (text.equals("else")) return new Token(TokenType.ELSE, text, line, startColumn);
+        if (text.equals("while")) return new Token(TokenType.WHILE, text, line, startColumn);
+        if (text.equals("read")) return new Token(TokenType.READ, text, line, startColumn);
+        if (text.equals("write")) return new Token(TokenType.WRITE, text, line, startColumn);
+        if (text.equals("true")) return new Token(TokenType.TRUE, text, line, startColumn);
+        if (text.equals("false")) return new Token(TokenType.FALSE, text, line, startColumn);
+        if (text.equals("break")) return new Token(TokenType.BREAK, text, line, startColumn);
+        
+        return new Token(TokenType.ID, text, line, startColumn);
     }
     
     private Token readNumber() {
@@ -148,10 +198,10 @@ public class LexerManual {
             while (position < input.length() && Character.isDigit(input.charAt(position))) {
                 position++; column++;
             }
-            return new Token("DOUBLE_LIT", input.substring(start, position), line, startColumn);
+            return new Token(TokenType.REAL_CONST, input.substring(start, position), line, startColumn);
         }
         
-        return new Token("INT", input.substring(start, position), line, startColumn);
+        return new Token(TokenType.INT_CONST, input.substring(start, position), line, startColumn);
     }
     
     private Token readString() {
@@ -191,6 +241,6 @@ public class LexerManual {
             System.err.printf("Error léxico [Línea %d:%d]: cadena sin cerrar%n", line, startColumn);
         }
         
-        return new Token("STRING", str.toString(), line, startColumn);
+        return new Token(TokenType.STRING_CONST, str.toString(), line, startColumn);
     }
 }

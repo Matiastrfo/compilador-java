@@ -1,5 +1,5 @@
 package main.java.compilador.ast;
 
 public interface ASTNode {
-    <T> T accept(compilador.visitors.Visitor<T> visitor);
+    <T> T accept(main.java.compilador.visitors.Visitor<T> visitor);
 }
