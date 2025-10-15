@@ -1,0 +1,16 @@
+# Archivos compilados de Java
+target/
+*.class
+*.jar
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de IDE
+.vscode/
+.idea/
+
+# Archivos temporales
+*.tmp
+compilar.sh.save
