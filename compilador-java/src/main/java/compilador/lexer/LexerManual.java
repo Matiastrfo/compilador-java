@@ -64,9 +64,6 @@ public class LexerManual {
                 continue;
             }
             
-            // ========== OPERADORES COMPUESTOS - CORREGIDOS ==========
-            
-            // Operadores de asignación compuesta: +=, -=, *=, /=
             if (current == '+' && position + 1 < input.length() && input.charAt(position + 1) == '=') {
                 tokens.add(new Token(TokenType.PLUS_ASSIGN, "+=", line, column));
                 position += 2; column += 2; continue;
@@ -165,7 +162,6 @@ public class LexerManual {
         }
         String text = input.substring(start, position);
         
-        // Verificar límite de 32 caracteres (recomendación PDF)
         if (text.length() > 32) {
             System.err.printf("Advertencia [Línea %d:%d]: identificador '%s' excede 32 caracteres%n", line, startColumn, text);
         }

@@ -32,20 +32,16 @@ public class Parser {
         }
     }
 
-    // ===============================
-    // PROGRAMA PRINCIPAL (AHORA CONSTRUYE AST)
-    // ===============================
+
     public Program parseProgram() {
         while (current.type != TokenType.EOF) {
             statements.add(parseStatement());
         }
-        System.out.println("✅ Análisis sintáctico completado - AST construido");
+        System.out.println("Análisis sintáctico completado - AST construido");
         return new Program(statements);
     }
 
-    // ===============================
-    // SENTENCIAS (AHORA DEVUELVEN OBJETOS AST)
-    // ===============================
+
     private Statement parseStatement() {
         switch (current.type) {
             case LONG, DOUBLE -> { return parseDeclaration(); }
@@ -62,9 +58,7 @@ public class Parser {
         }
     }
 
-    // ===============================
-    // DECLARACIÓN (AHORA CONSTRUYE DECLARATION)
-    // ===============================
+  
     private Declaration parseDeclaration() {
         String type = current.text; // "long" o "double"
         eat(current.type);
@@ -90,9 +84,7 @@ public class Parser {
         return new Declaration(type, ids);
     }
 
-    // ===============================
-    // ASIGNACIÓN (AHORA CONSTRUYE ASSIGNMENT)
-    // ===============================
+  
     private Assignment parseAssignment() {
         String id = current.text;
         eat(TokenType.ID);
@@ -102,9 +94,6 @@ public class Parser {
         return new Assignment(id, expr);
     }
 
-    // ===============================
-    // READ (AHORA CONSTRUYE READ)
-    // ===============================
     private Read parseRead() {
         eat(TokenType.READ);
         eat(TokenType.LPAREN);
@@ -115,9 +104,7 @@ public class Parser {
         return new Read(varName);
     }
 
-    // ===============================
-    // WRITE (AHORA CONSTRUYE WRITE)
-    // ===============================
+    
     private Write parseWrite() {
         eat(TokenType.WRITE);
         eat(TokenType.LPAREN);
@@ -127,9 +114,7 @@ public class Parser {
         return new Write(expr);
     }
 
-    // ===============================
-    // IF (AHORA CONSTRUYE IFSTATEMENT)
-    // ===============================
+   
     private IfStatement parseIf() {
         eat(TokenType.IF);
         eat(TokenType.LPAREN);
@@ -147,9 +132,7 @@ public class Parser {
         return new IfStatement(condition, thenStmt, elseStmt);
     }
 
-    // ===============================
-    // WHILE (AHORA CONSTRUYE WHILE)
-    // ===============================
+
     private While parseWhile() {
         eat(TokenType.WHILE);
         eat(TokenType.LPAREN);
@@ -164,19 +147,16 @@ public class Parser {
         
         eat(TokenType.RBRACE);
         
-        // Por simplicidad, si hay múltiples statements los envolvemos en un bloque
-        // En una versión más completa, crearíamos una clase Block
+       
         if (bodyStatements.size() == 1) {
             return new While(condition, bodyStatements.get(0));
         } else {
-            // Para múltiples statements, usamos el primero (simplificación)
+            
             return new While(condition, bodyStatements.get(0));
         }
     }
 
-    // ===============================
-    // CONDICIONES (AHORA CONSTRUYE EXPRESIONES)
-    // ===============================
+
     private Expr parseCondition() {
         Expr left = parseExpression();
         
@@ -194,9 +174,6 @@ public class Parser {
         return new BinaryExpr(operator, left, right);
     }
 
-    // ===============================
-    // EXPRESIONES (AHORA CONSTRUYEN EXPR)
-    // ===============================
     private Expr parseExpression() {
         return parseAdditive();
     }

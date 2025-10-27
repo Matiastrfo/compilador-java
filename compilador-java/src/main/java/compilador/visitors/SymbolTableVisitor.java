@@ -27,7 +27,7 @@ public class SymbolTableVisitor implements Visitor<Void> {
             Symbol symbol = new Symbol(id, d.type, currentScope, 0); // Línea 0 por simplicidad
             try {
                 symbolTable.add(symbol);
-                System.out.println("✅ Símbolo agregado: " + id + " (" + d.type + ")");
+                System.out.println("Símbolo agregado: " + id + " (" + d.type + ")");
             } catch (RuntimeException e) {
                 System.err.println("❌ " + e.getMessage());
             }
@@ -42,7 +42,7 @@ public class SymbolTableVisitor implements Visitor<Void> {
         if (symbol == null) {
             System.err.println("❌ Variable no declarada: " + a.id);
         } else {
-            System.out.println("✅ Asignación a variable declarada: " + a.id);
+            System.out.println("Asignación a variable declarada: " + a.id);
         }
         a.expr.accept(this);
         return null;
@@ -69,9 +69,9 @@ public class SymbolTableVisitor implements Visitor<Void> {
     public Void visitRead(Read readStmt) {
         Symbol symbol = symbolTable.get(readStmt.variableName);
         if (symbol == null) {
-            System.err.println("❌ Variable no declarada en read: " + readStmt.variableName);
+            System.err.println("Variable no declarada en read: " + readStmt.variableName);
         } else {
-            System.out.println("✅ Read de variable declarada: " + readStmt.variableName);
+            System.out.println("Read de variable declarada: " + readStmt.variableName);
         }
         return null;
     }
@@ -98,7 +98,7 @@ public class SymbolTableVisitor implements Visitor<Void> {
     public Void visitVariable(Variable var) {
         Symbol symbol = symbolTable.get(var.name);
         if (symbol == null) {
-            System.err.println("❌ Variable no declarada: " + var.name);
+            System.err.println("Variable no declarada: " + var.name);
         }
         return null;
     }
