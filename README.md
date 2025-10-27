@@ -76,12 +76,11 @@ Realiza análisis léxico, sintáctico y construcción de tabla de símbolos seg
 
 ### **Compilación y Ejecución**
 ```bash
-# Windows
-complar.bat
+Ejecutar (desde macOS/Linux)
+./compilar.sh
 
-# Linux/Mac
-chmod +x complar.sh
-./complar.sh
+O desde Windows
+compilar.bat
 ```
 
 ---
