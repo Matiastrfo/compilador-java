@@ -80,7 +80,7 @@ Ejecutar (desde macOS/Linux)
 ./compilar.sh
 
 O desde Windows
-compilar.bat
+./compilar.bat
 ```
 
 ---
