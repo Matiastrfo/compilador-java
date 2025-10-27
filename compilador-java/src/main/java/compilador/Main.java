@@ -23,7 +23,7 @@ public class Main {
                 if (_x > _y) then
                     _prom = (_x + _y) / 2;
                 else
-                    _prom = (_y - _x) / 2;x
+                    _prom = (_y - _x) / 2;
                     
                 write(_prom);
                 
